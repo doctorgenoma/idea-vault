@@ -389,15 +389,16 @@
     const note = NOTES[activeIndex];
     const line = "\n- [ ] " + text;
 
-    const params = new URLSearchParams({
-      vault: note.vault,
-      file: note.file,
-      content: line,
-      append: "true",
-      silent: "true"
-    });
+    // Importante: usamos encodeURIComponent a mano (no URLSearchParams),
+    // porque URLSearchParams codifica los espacios como "+" y Obsidian
+    // los interpreta literalmente en vez de como espacio.
+    const uri = "obsidian://new"
+      + "?vault=" + encodeURIComponent(note.vault)
+      + "&file=" + encodeURIComponent(note.file)
+      + "&content=" + encodeURIComponent(line)
+      + "&append=true"
+      + "&silent=true";
 
-    const uri = "obsidian://new?" + params.toString();
     window.location.href = uri;
 
     sessionLog[activeIndex].push(text);
